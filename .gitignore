@@ -1,2 +1,5 @@
 # ignore db variables
 /server/envVars.js
+
+# ignore node-modules
+/node_modules/*
