@@ -14,3 +14,7 @@ The database schemas can be found at [this Lucidcharts link.](https://lucid.app/
 There are two pages, which can be toggled in the bottom left of Lucidcharts.
 The SQL database is hosted at [ElephantSQL](https://www.elephantsql.com/).
 The NoSQL database is hosted at [MongoDB](https://cloud.mongodb.com/).
+
+# Ideation and design documents
+These are mainly rough sketches, and I apologize for my poor handwriting
+The initial design documents are available [at my Google drive folder](https://drive.google.com/drive/folders/1cnTH0GwwzGRmew2bdcvSJMhqIPDd5TpX?usp=sharing)
