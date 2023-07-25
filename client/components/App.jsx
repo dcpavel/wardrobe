@@ -3,8 +3,11 @@ import MainContainer from './containers/MainContainer';
 
 const App = () => {
   return(
-    <div>
-      <MainContainer />
+    <div className="main">
+      <Routes>
+        <Route path="/" element={<MainContainer />} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
     </div>
   );
 }

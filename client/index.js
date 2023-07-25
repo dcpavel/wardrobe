@@ -3,8 +3,11 @@ import { render } from 'react-dom';
 import App from './components/App';
 
 import styles from './styles/app.scss';
+import { BrowserRouter } from 'react-router-dom';
 
-render (
-  <App />,
+ReactDOM.render(
+  <BrowserRouter>
+    <App />
+  </BrowserRouter>,
   document.getElementById('root')
 )
