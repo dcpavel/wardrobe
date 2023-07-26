@@ -47,6 +47,69 @@ clothes.getById = (id) => {
   }
 };
 
+clothes.getByNoSqlKey = (key) => {
+  try {
+    const getQuery = `SELECT * FROM clothing WHERE nosqlkey=$1;`;
+
+    const res = db.query( getQuery, [ key ] );
+
+    return res.rows[0];
+  } catch (err) {
+    return err;
+  }
+}
+
+clothes.getByWordrobeId = (id) => {
+  try {
+    const getQuery = `SELECT * FROM clothing WHERE wardrobeid=$1;`;
+
+    const res = db.query( getQuery, [ id ] );
+
+    return res.rows;
+  } catch (err) {
+    return err;
+  }
+}
+
+clothes.getAll = () => {
+  try {
+    const getQuery = `SELECT * FROM clothing;`;
+
+    const res = db.query( getQuery);
+
+    return res.rows;
+  } catch (err) {
+    return err;
+  }
+}
+
+clothes.updateClothing = (id, clothingObj) => {
+  try {
+    const { typeId } = clothingObj;
+
+    // is it worth checking if the typeid has changed?
+    if (!typeId) {
+      throw Error('You may only change typeid');
+    }
+
+    const updateQuery = `
+      UPDATE clothing
+      SET typeid=$1
+      WHERE _id=$2
+      RETURNING *;
+    `;
+
+    const res = db.query(
+      updateQuery,
+      [ typeId, id ]
+    );
+
+    return res.rows[0];
+  } catch (err) {
+    return err;
+  }
+};
+
 clothes.deleteById = (id) => {
   try {
     const deleteQuery = `

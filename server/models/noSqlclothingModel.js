@@ -1,6 +1,4 @@
-const { MONGO_URI } = require('../envVars');
-
-const db = mongoose.createConnection(MONGO_URI);
+const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 /*
@@ -12,7 +10,14 @@ const Schema = mongoose.Schema;
 */ 
 
 const clothingSchema = new Schema({
-
+  _id: { type: Number, required: true, unique: true},
+  name: { type: String, required: true },
+  link: String,
+  colors: Array,
+  patterns: Array,
+  fabrics: Array,
+  picture: String,
+  thumbnail: String,
 });
 const clothes = mongoose.model('clothes', clothingSchema);
 
