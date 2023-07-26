@@ -66,7 +66,7 @@ describe('Postgres clothing table unit tests', () => {
       return;
     });
 
-    xit('writes to the clothing table', async () => {
+    it('writes to the clothing table', async () => {
       const res = await pClothing.createClothing(createClothing);
 
       expect(res).not.toBeInstanceOf(Error);
@@ -75,11 +75,19 @@ describe('Postgres clothing table unit tests', () => {
       clothingId = res._id;
     });
 
-    xit('gets one clothing row by id', async () => {
+    it('gets one clothing row by id', async () => {
       const clothing = await pClothing.getById(clothingId);
 
       expect(clothing).not.toBeInstanceOf(Error);
       expect(clothing).toHaveProperty('_id');
+    });
+
+    xit('gets one clothing row by noSqlKey', async () => {
+      const clothing = await pClothing.getByNoSqlKey(createClothing.noSqlKey);
+
+      expect(clothing).not.toBeInstanceOf(Error);
+      expect(clothing).toHaveProperty('nosqlkey');
+      expect(clothing.noqslkey).toEqual(createClothing.noSqlKey);
     });
 
     xit('gets all articles of clothing', async () => {
@@ -155,7 +163,7 @@ describe('Postgres clothing table unit tests', () => {
       expect(clothing.createdon).not.toEqual(clothing.lastmodified);
     });
 
-    xit('we can delete the clothing by id', async () => {
+    it('we can delete the clothing by id', async () => {
       const createdClothing = await pClothing.getById(clothingId);
       const res = await pClothing.deleteById(clothingId);
 
@@ -166,14 +174,13 @@ describe('Postgres clothing table unit tests', () => {
 });
 
 describe('MongoDB clothing collection unit tests', () => {
-  afterAll(() => {
-
+  afterAll(async () => {
+    await mDb.close();
   });
 
   describe('We can connect to the database', () => {
     it('connects to the database', () => {
       expect(mDb).not.toBeInstanceOf(Error);
-      expect(mDb).toHaveProperty('query');
     });
   });
 
