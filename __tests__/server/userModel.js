@@ -1,6 +1,7 @@
 const { users, db } = require('../../server/models/userModel');
 
 describe('Postgres unit tests', () => {
+
   afterAll(() => {
     db.end();
   });
@@ -13,6 +14,9 @@ describe('Postgres unit tests', () => {
   });
 
   describe('we can access the user table', () => {
+    // this gets set in the first test
+    let id;
+
     const createUser = {
       firstname: 'first',
       lastname: 'last',
@@ -24,7 +28,9 @@ describe('Postgres unit tests', () => {
     it('writes to users', async () => {     
       const res = await users.createUser(createUser);
       expect(res).not.toBeInstanceOf(Error);
-      expect(res.rowCount).toEqual(1);
+      expect(res).toHaveProperty('_id');
+
+      id = res._id;
     });    
 
     it('reads from users', async () => {
@@ -33,9 +39,27 @@ describe('Postgres unit tests', () => {
       expect(allUsers.length).toBeGreaterThan(0);
     });
 
-    it('updates user fields', async () => {      
-      const { _id } = await users.getByUsername(createUser.username);
+    it('validates a correct password', async () => {
+      const testLogin = {
+        username: createUser.username,
+        password: createUser.password
+      };
 
+      const res = await users.verifyUser(testLogin);
+      expect(res).toEqual(true);
+    });
+
+    it('does not validate an incorrect password', async () => {
+      const testLogin = {
+        username: createUser.username,
+        password: 'fail'
+      };
+
+      const res = await users.verifyUser(testLogin);
+      expect(res).toEqual(false);
+    });
+
+    it('updates user fields', async () => {      
       for (const field in createUser) {
         // every field but username should be variable        
         const changedUser = Object.assign({}, createUser);
@@ -44,22 +68,28 @@ describe('Postgres unit tests', () => {
         delete changedUser.password;
         changedUser[field] += '2';
 
-        const res = await users.updateUser(_id, changedUser);
+        const res = await users.updateUser(id, changedUser);
         if (field !== 'username') {
-          console.log(res); 
           expect(res).not.toBeInstanceOf(Error);         
-          expect(res.rowCount).toEqual(1);
+          expect(res.field).toEqual(changedUser.field);
         } else {
           expect(res).toBeInstanceOf(Error);
         }
       }
     });
 
-    it('deletes from users', async () => {
-      const createdUser = await users.getByUsername(createUser.username);
-      const res = await users.delById(createdUser._id);
+    it('changes a user\'s password', async () => {      
+      const newPassword = 'newPassword';
+      const res = await users.updatePassword(id, newPassword);
       expect(res).not.toBeInstanceOf(Error);
-      expect(res.rowCount).toEqual(1);
+      expect(res).toHaveProperty('_id');
+    });
+
+    it('deletes from users', async () => {
+      const createdUser = await users.getById(id);
+      const res = await users.delById(id);
+      expect(res).not.toBeInstanceOf(Error);
+      expect(res).toEqual(createdUser);
     });
 
     it('errors on required fields', async () => {
@@ -75,44 +105,3 @@ describe('Postgres unit tests', () => {
     });
   })
 });
-
-/*
-Saving for future reference:
-  const createTempUsers = `
-    CREATE TEMP TABLE temp_users (
-      _id integer PRIMARY KEY,
-      firstName varchar(40) NOT NULL,
-      lastName varchar(40),
-      userName varchar(40) UNIQUE NOT NULL,
-      password varchar(80) NOT NULL,
-      email varchar(40) UNIQUE NOT NULL
-    );
-  `;
-
-  const createTempWardrobes = `
-    CREATE TEMP TABLE temp_wardrobes (
-      _id SERIAL PRIMARY KEY,
-      userId integer references users(_id),
-      name varchar(80)
-    );
-  `;
-    
-  const createTempClothingTypes = `
-    CREATE TEMP TABLE temp_clothingTypes (
-      _id SERIAL PRIMARY KEY,
-      name varchar(80) UNIQUE NOT NULL,
-      bodyPosition varchar(80) NOT NULL
-    );
-  `;
-    
-  const createTempClothing = `
-    CREATE TEMP TABLE temp_clothing (
-      _id SERIAL PRIMARY KEY,
-      wardrobeId INT references wardrobes(_id),
-      typeId INT references clothingTypes(_id),
-      noSqlKey varchar(80),
-      createdOn timestamp,
-      lastModified timestamp
-    );
-  `; 
-*/

@@ -5,9 +5,17 @@ const bcrypt = require('bcrypt');
 const db = new Pool({
   connectionString: PSQL_URI
 });
-const WORK_FACTOR = 10;
 
 const users = {};
+
+const encryptPass = async (password) => {
+  const WORK_FACTOR = 10;
+
+  const salt = await bcrypt.genSalt(WORK_FACTOR);
+  const encPassword = await bcrypt.hash(password, salt);
+
+  return encPassword;
+}
 
 // get all users
 users.getAll = async () => {
@@ -46,12 +54,13 @@ users.getByUsername = async (username) => {
 };
 
 // verify user
-users.verifyUser = async (user) => {
+users.verifyUser = async ({ username, password }) => {
   try {
-    const dbUser = this.getByUsername(user.username);
-    const dbPassword = dbUser.rows[0].password;
+    const dbUser = await users.getByUsername(username);
+    const dbPassword = dbUser.password;
 
-    return await bcrypt.compare(user.password, dbPassword);
+    const res = await bcrypt.compare(password, dbPassword);
+    return res;
   } catch (err) {
     return err;
   }
@@ -72,19 +81,19 @@ users.createUser = async (userObj) => {
       throw Error('Cannot have null password');
     }
 
-    const salt = await bcrypt.genSalt(WORK_FACTOR);
-    const encPassword = await bcrypt.hash(password, salt);
+    const encPassword = await encryptPass(password);
 
     const createQuery = `
     INSERT INTO users
       ( firstname, lastname, username, password, email )
-    VALUES ($1, $2, $3, $4, $5);
+    VALUES ($1, $2, $3, $4, $5)
+    RETURNING *;
     `;
     const res = await db.query(createQuery,
       [firstname, lastname, username, encPassword, email]
     );
 
-    return res;
+    return res.rows[0];
   } catch (err) {
     return err;
   }
@@ -93,10 +102,13 @@ users.createUser = async (userObj) => {
 // delete by id
 users.delById = async (id) => {
   try {
-    const delQuery = `DELETE FROM users WHERE _id=$1`;
+    const delQuery = `
+      DELETE FROM users WHERE _id=$1
+      RETURNING *;
+    `;
     const res = await db.query(delQuery, [id]);
 
-    return res;
+    return res.rows[0];
   } catch (err) {
     return err;
   }
@@ -113,7 +125,7 @@ users.updateUser = async (id, userObj) => {
     } = userObj;
     
     // shouldn't change username
-    const currUser = users.getById(id);
+    const currUser = await users.getById(id);
     if (username !== currUser.username) {
       throw Error('Cannot change username')
     }
@@ -126,6 +138,32 @@ users.updateUser = async (id, userObj) => {
     `;
     const res = await db.query(updateQuery, [ firstname, lastname, email, id ]);
     return res.rows[0];
+  } catch (err) {
+    return err;
+  }
+}
+
+// change password
+users.updatePassword = async (id, newPassword) => {
+  try {
+    const user = await users.getById(id);
+
+    // if the passwords don't match, change the password
+    // NOTE: WE NEED TO ONLY RUN THIS IF USER IS LOGGED IN
+    if (!users.verifyUser(user.username, newPassword)) {
+      const updateQuery = `
+        UPDATE users 
+        SET password=$1
+        WHERE _id=$2
+        RETURNING *;
+      `;
+      const encPassword = encryptPass(newPassword);
+
+      const res = await db.query(updateQuery, [ encPassword, id ]);
+      user = res.rows[0];
+    }
+
+    return user;
   } catch (err) {
     return err;
   }
