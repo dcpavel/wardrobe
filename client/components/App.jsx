@@ -1,13 +1,18 @@
 import React from 'react';
-import MainContainer from './containers/MainContainer';
+import { createBrowserRouter, RouteProvider} from 'react-router-dom';
+import HeaderNav from './HeaderNav';
+import MainContainer from './MainContainer';
+import Footer from './Footer';
+import '../styles/base.scss';
 
 const App = () => {
-  return(
-    <div className="main">
-      <Routes>
-        <Route path="/" element={<MainContainer />} />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
+  return (
+    <div>
+      <HeaderNav />
+      <MainContainer />
+      <Footer />
     </div>
   );
 }
+
+export default App;
