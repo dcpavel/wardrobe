@@ -2,7 +2,7 @@ const { clothingTypes, db } = require('../../server/models/clothingTypeModel');
 
 describe('Postgres clothingTypes table unit tests', () => {
   afterAll(async () => {
-    await db.end();
+    return await db.end();
   });
 
   describe('We can connect to the database', () => {
@@ -12,17 +12,17 @@ describe('Postgres clothingTypes table unit tests', () => {
     });
   });
 
-  describe('we can access the clothingTypes table', () => {
+  describe('we can modify the clothingTypes table', () => {
     // this gets set in the first test
     let id;
     
-    const createClothing = {
+    const createType = {
       name: 'test',
       bodyPosition: 'torso'
-    }
+    };
 
     it('writes to clothingTypes', async () => {   
-      const res = await clothingTypes.createType(createClothing);
+      const res = await clothingTypes.createType(createType);
       expect(res).not.toBeInstanceOf(Error);
       expect(res).toHaveProperty('_id');
 
@@ -42,8 +42,8 @@ describe('Postgres clothingTypes table unit tests', () => {
     });
 
     it('updates fields', async () => {      
-      for (const field in createClothing) {
-        const changedType = Object.assign({}, createClothing);
+      for (const field in createType) {
+        const changedType = Object.assign({}, createType);
         changedType[field] += '1';
         const res = await clothingTypes.updateType(id, changedType);
         expect(res).not.toBeInstanceOf(Error);         
@@ -52,7 +52,7 @@ describe('Postgres clothingTypes table unit tests', () => {
     });
 
     it('will not create a type with duplicate name', async () => {
-      const dupType = Object.assign({}, createClothing, { bodyPosition: 'test2' });
+      const dupType = Object.assign({}, createType, { bodyPosition: 'test2' });
       const res = await clothingTypes.createType(dupType);
       expect(res).toBeInstanceOf(Error);
     });
@@ -65,8 +65,8 @@ describe('Postgres clothingTypes table unit tests', () => {
     });
 
     it('does not create clothingType without a name or bodyPosition', async () => {
-      for (const field in createClothing) {
-        const changedType = Object.assign({}, createClothing);
+      for (const field in createType) {
+        const changedType = Object.assign({}, createType);
         delete changedType.field;
         const res = await clothingTypes.createType(id, changedType);
         expect(res).toBeInstanceOf(Error)

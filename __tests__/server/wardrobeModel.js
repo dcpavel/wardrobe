@@ -3,7 +3,7 @@ const { users } = require('../../server/models/userModel');
 
 describe('Postgres wardrobes table unit tests', () => {
   afterAll(async () => {
-    await db.end();
+    return await db.end();
   });
 
   describe('We can connect to the database', () => {
@@ -13,7 +13,7 @@ describe('Postgres wardrobes table unit tests', () => {
     });
   });
 
-  describe('we can access the wardrobes table', () => {
+  describe('we can modify the wardrobes table', () => {
     // this gets set in the beforeAll
     let userId;
     let createWardrobe;
@@ -36,10 +36,12 @@ describe('Postgres wardrobes table unit tests', () => {
         userId: user._id,
         name: 'testWardrobe'
       };
+
+      return;
     });
 
     afterAll(async () => {
-      await users.deleteById(userId);
+      return await users.deleteById(userId);
     });
     
     it('writes to wardrobes', async () => {   

@@ -2,8 +2,8 @@ const { users, db } = require('../../server/models/userModel');
 
 describe('Postgres user table unit tests', () => {
 
-  afterAll(() => {
-    db.end();
+  afterAll(async () => {
+    return await db.end();
   });
 
   describe('We can connect to the database', () => {
@@ -13,7 +13,7 @@ describe('Postgres user table unit tests', () => {
     });
   });
 
-  describe('we can access the user table', () => {
+  describe('we can modify the user table', () => {
     // this gets set in the first test
     let id;
 
