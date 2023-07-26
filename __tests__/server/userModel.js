@@ -1,6 +1,10 @@
-const db = require('../../server/models/userModel');
+const { users, db } = require('../../server/models/userModel');
 
 describe('Postgres unit tests', () => {
+  afterAll(() => {
+    db.end();
+  });
+
   describe('We can connect to the database', () => {
     it('connects to the database', () => {
       expect(db).not.toBeInstanceOf(Error);
@@ -9,32 +13,65 @@ describe('Postgres unit tests', () => {
   });
 
   describe('we can access the user table', () => {
-    const writeQuery = `
-        INSERT INTO users(
-          firstname,
-          lastname,
-          username,
-          password,
-          email
-        ) VALUES (
-          $1, $2, $3, $4, $5
-        );
-      `;
-    const user = ['first', 'last', 'username', 'password', 'test@email.com'];
+    const createUser = {
+      firstname: 'first',
+      lastname: 'last',
+      username: 'username',
+      password: 'password',
+      email: 'test@email.com'
+    };
     
     it('writes to users', async () => {     
-      const newUser = await db.query(writeQuery, user);
-      expect(newUser).not.toBeInstanceOf(Error);
-      expect(newUser.length).toEqual(1);
-    });
-
-    
+      const res = await users.createUser(createUser);
+      expect(res).not.toBeInstanceOf(Error);
+      expect(res.rowCount).toEqual(1);
+    });    
 
     it('reads from users', async () => {
-      const readQuery = 'SELECT * FROM users;';
-      const users = await db.query(readQuery);
-      expect(users).toBeInstanceOf(Array);
-      expect(users.length).toBeGreaterThan(0);
+      const allUsers = await users.getAll();
+      expect(allUsers).toBeInstanceOf(Array);
+      expect(allUsers.length).toBeGreaterThan(0);
+    });
+
+    it('updates user fields', async () => {      
+      const { _id } = await users.getByUsername(createUser.username);
+
+      for (const field in createUser) {
+        // every field but username should be variable        
+        const changedUser = Object.assign({}, createUser);
+
+        // we will change password separately
+        delete changedUser.password;
+        changedUser[field] += '2';
+
+        const res = await users.updateUser(_id, changedUser);
+        if (field !== 'username') {
+          console.log(res); 
+          expect(res).not.toBeInstanceOf(Error);         
+          expect(res.rowCount).toEqual(1);
+        } else {
+          expect(res).toBeInstanceOf(Error);
+        }
+      }
+    });
+
+    it('deletes from users', async () => {
+      const createdUser = await users.getByUsername(createUser.username);
+      const res = await users.delById(createdUser._id);
+      expect(res).not.toBeInstanceOf(Error);
+      expect(res.rowCount).toEqual(1);
+    });
+
+    it('errors on required fields', async () => {
+      for (const field in createUser) {
+        // lastname isn't a required field, omit that test
+        if (field !== 'lastname') {
+          const errUser = Object.assign({}, createUser);
+          errUser[field] = '';
+          const res = await users.createUser(errUser);
+          expect(res).toBeInstanceOf(Error);
+        }
+      }
     });
   })
 });
