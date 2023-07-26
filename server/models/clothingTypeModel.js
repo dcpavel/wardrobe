@@ -1,10 +1,4 @@
-const { Pool } = require('pg');
-const { PSQL_URI } = require('../envVars');
-const { get } = require('http');
-
-const db = new Pool({
-  connectionString: PSQL_URI
-});
+const { db } = require('../envVars');
 
 const clothingTypes = {};
 

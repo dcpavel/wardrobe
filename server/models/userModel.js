@@ -1,10 +1,5 @@
-const { Pool } = require('pg');
-const { PSQL_URI } = require('../envVars');
+const { db } = require('../envVars');
 const bcrypt = require('bcrypt');
-
-const db = new Pool({
-  connectionString: PSQL_URI
-});
 
 const users = {};
 

@@ -1,9 +1,11 @@
 const express = require('express');
+const mongoose = require('mongoose');
 const path = require('path');
 const cookieParser = require('cookie-parser');
-const { PORT } = require('./envVars');
+const { PORT,  MONGO_URI } = require('./envVars');
 
 const app = express();
+mongoose.connect(MONGO_URI);
 
 // require routers
 const userRouter = require('./routes/userRouter');

@@ -1,9 +1,4 @@
-const { Pool } = require('pg');
-const { PSQL_URI } = require('../envVars');
-
-const db = new Pool({
-  connectionString: PSQL_URI
-});
+const { db } = require('../envVars');
 
 /*
   Thoughts:
@@ -15,18 +10,57 @@ const db = new Pool({
 const clothes = {};
 
 clothes.createClothing = (clothingObj) => {
-  const createQuery = `
-  `;
+  try {
+    const {
+      wardrobeId,
+      typeId,
+      noSqlKey
+    } = clothingObj;
 
-  
+    const createQuery = `
+      INSERT INTO clothing
+        ( wardrobeId, typeId, noSqlKey)
+      VALUES ( $1, $2, $3 )
+      RETURNING *;
+    `;
+
+    const res = db.query(
+      createQuery,
+      [ wardrobeId, typeId, noSqlKey ]
+    );
+
+    return res.rows[0];
+  } catch (err) {
+    return err;
+  }
 };
 
 clothes.getById = (id) => {
+  try {
+    const getQuery = `SELECT * FROM clothing WHERE _id=$1;`;
 
+    const res = db.query( getQuery, [ id ] );
+
+    return res.rows[0];
+  } catch (err) {
+    return err;
+  }
 };
 
 clothes.deleteById = (id) => {
+  try {
+    const deleteQuery = `
+      DELETE FROM clothing
+      WHERE _id=$1
+      RETURNING *;
+    `;
 
+    const res = db.query( deleteQuery, [ id ] )
+
+    return res.rows[0];
+  } catch (err) {
+    return err;
+  }
 };
 
 module.exports = {

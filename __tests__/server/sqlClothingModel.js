@@ -1,11 +1,11 @@
-const { clothing, db } = require('../../server/models/sqlClothingModel');
+const { clothes, db } = require('../../server/models/sqlClothingModel');
 const { wardrobes } = require('../../server/models/wardrobeModel');
 const { clothingTypes } = require('../../server/models/clothingTypeModel');
 const { users } = require('../../server/models/userModel');
 
 describe('Postgres clothing table unit tests', () => {
-  afterAll(() => {
-    db.end();
+  afterAll(async () => {
+    await db.end();
   });
 
   describe('We can connect to the database', () => {
@@ -54,20 +54,20 @@ describe('Postgres clothing table unit tests', () => {
         typeId: type._id,
         noSqlKey: 'testKey',        
       };
-
+      
       return;
     });
 
-    afterAll(async () => {      
-      await users.deleteById(userId);      
-      await wardrobes.deleteById(createClothing.wardrobeId);
-      await clothingTypes.deleteById(createClothing.typeId);
+    afterAll(async () => {   
+      const resUsers = await users.deleteById(userId);      
+      const resWardrobes = await wardrobes.deleteById(createClothing.wardrobeId);
+      const resTypes = await clothingTypes.deleteById(createClothing.typeId);
 
       return;
     });
 
     it('writes to the clothing table', async () => {
-      const res = await clothing.createClothing(createClothing);
+      const res = await clothes.createClothing(createClothing);
 
       expect(res).not.toBeInstanceOf(Error);
       expect(res).toHaveProperty('_id');
@@ -76,14 +76,14 @@ describe('Postgres clothing table unit tests', () => {
     });
 
     it('gets one clothing row by id', async () => {
-      const clothing = await clothing.getById(clothingId);
+      const clothing = await clothes.getById(clothingId);
 
       expect(clothing).not.toBeInstanceOf(Error);
       expect(clothing).toHaveProperty('_id');
     });
 
     xit('gets one clothing row by noSqlKey', async () => {
-      const clothing = await clothing.getByNoSqlKey(createClothing.noSqlKey);
+      const clothing = await clothes.getByNoSqlKey(createClothing.noSqlKey);
 
       expect(clothing).not.toBeInstanceOf(Error);
       expect(clothing).toHaveProperty('nosqlkey');
@@ -91,7 +91,7 @@ describe('Postgres clothing table unit tests', () => {
     });
 
     xit('gets all articles of clothing', async () => {
-      const allClothes = await clothing.getAll();
+      const allClothes = await clothes.getAll();
 
       expect(allClothes).not.toBeInstanceOf(Error);
       expect(allClothes.length).toBeGreaterThan(0);
@@ -102,10 +102,10 @@ describe('Postgres clothing table unit tests', () => {
       const changedWardrobe = Object.assign({}, createWardrobe, { name: 'newWardrobe' });
       const newWardrobe = await wardrobes.createWardrobe(changedWardrobe);      
       const changedClothing = Object.assign({}, createClothing, { wardrobeId: newWardrobe._id });
-      const newClothing = await clothing.createClothing(changedClothing);
+      const newClothing = await clothes.createClothing(changedClothing);
 
       // here is what we will test
-      const clothing = await clothing.getByWardrobeId(createClothing.wardrobeId);      
+      const clothing = await clothes.getByWardrobeId(createClothing.wardrobeId);      
 
       // do this before the test as cleanup in case of error
       await wardrobes.deleteById(newWardrobe._id);
@@ -123,7 +123,7 @@ describe('Postgres clothing table unit tests', () => {
       const changedClothing = Object.assign({}, createClothing, { typeId: newType._id });
 
       // here is what we will test
-      const clothing = await clothing.updateClothing(clothingId, changedClothing);
+      const clothing = await clothes.updateClothing(clothingId, changedClothing);
 
       // do this before the test as cleanup in case of error
       await clothingTypes.deleteById(newType._id);
@@ -140,7 +140,7 @@ describe('Postgres clothing table unit tests', () => {
       const changedClothing = Object.assign({}, createClothing, { wardrobeId: newWardrobe._id });
 
       // here is what we will test
-      const clothing = await clothing.updateClothing(clothingId, changedClothing);
+      const clothing = await clothes.updateClothing(clothingId, changedClothing);
 
       // do this before the test as cleanup in case of error
       await wardrobes.deleteById(newWardrobe._id);
@@ -151,21 +151,21 @@ describe('Postgres clothing table unit tests', () => {
 
     xit('we cannot modify the noSqlKey', async () => {
       const changedClothing = Object.assign({}, createClothing, { noSqlKey: 'something' });
-      const clothing = await clothing.updateClothing(clothingId, changedClothing);
+      const clothing = await clothes.updateClothing(clothingId, changedClothing);
 
       expect(clothing).toBeInstanceOf(Error);
     });
 
     xit('the lastModifiedOn column updates', async () => {
-      const clothing = await clothing.getById(clothingId);
+      const clothing = await clothes.getById(clothingId);
 
       expect(clothing).toHaveProperty('lastmodified');
       expect(clothing.createdon).not.toEqual(clothing.lastmodified);
     });
 
     it('we can delete the clothing by id', async () => {
-      const createdClothing = await clothing.getById(clothingId);
-      const res = await clothing.deleteById(clothingId);
+      const createdClothing = await clothes.getById(clothingId);
+      const res = await clothes.deleteById(clothingId);
 
       expect(res).not.toBeInstanceOf(Error);
       expect(res).toEqual(createdClothing);

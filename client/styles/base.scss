@@ -1,7 +1,7 @@
-@use 'modules/vars';
+@use 'modules/vars' as v;
 
 body {
-  background-color: $bg-color;
+  background-color: v.$bg-color;
 }
 
 

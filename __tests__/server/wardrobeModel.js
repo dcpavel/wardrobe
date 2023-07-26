@@ -2,9 +2,19 @@ const { wardrobes, db } = require('../../server/models/wardrobeModel');
 const { users } = require('../../server/models/userModel');
 
 describe('Postgres wardrobes table unit tests', () => {
-  afterAll(async () => {
-    return await db.end();
+  let client;
+  beforeAll(async () => {
+    client = await db.connect();
+    return;
   });
+
+  afterAll(async () => {
+    client.release();
+    await db.end();
+    return;
+  });
+
+
 
   describe('We can connect to the database', () => {
     it('connects to the database', () => {
@@ -41,7 +51,8 @@ describe('Postgres wardrobes table unit tests', () => {
     });
 
     afterAll(async () => {
-      return await users.deleteById(userId);
+      await users.deleteById(userId);
+      return;
     });
     
     it('writes to wardrobes', async () => {   
