@@ -33,10 +33,10 @@ app.get('/',
 );
 
 // database
-app.use('/users', userRouter);
-app.use('/wardrobe', wardrobeRouter);
-app.use('/clothes', clothingRouter);
-app.use('/clotheType', clothingTypeRouter);
+app.use('/api/users', userRouter);
+app.use('/api/wardrobes', wardrobeRouter);
+app.use('/api/clothes', clothingRouter);
+app.use('/api/clothingTypes', clothingTypeRouter);
 
 // catch-all for unknown routes
 app.use((_, res) => {
