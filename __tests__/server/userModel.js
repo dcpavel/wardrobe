@@ -27,6 +27,7 @@ describe('Postgres user table unit tests', () => {
     
     it('writes to users', async () => {     
       const res = await users.createUser(createUser);
+      
       expect(res).not.toBeInstanceOf(Error);
       expect(res).toHaveProperty('_id');
 
@@ -35,18 +36,21 @@ describe('Postgres user table unit tests', () => {
 
     it('reads from users', async () => {
       const allUsers = await users.getAll();
+
       expect(allUsers).toBeInstanceOf(Array);
       expect(allUsers.length).toBeGreaterThan(0);
     });
 
     it('gets a user by id', async () => {
       const user = await users.getById(id);
+
       expect(user).not.toBeInstanceOf(Error);
       expect(user._id).toEqual(id);
     });
 
     it('gets a user by username', async () => {
       const user = await users.getByUsername(createUser.username);
+
       expect(user).not.toBeInstanceOf(Error);
       expect(user._id).toEqual(id);
     });
@@ -58,6 +62,7 @@ describe('Postgres user table unit tests', () => {
       };
 
       const res = await users.verifyUser(testLogin);
+
       expect(res).toEqual(true);
     });
 
@@ -68,6 +73,7 @@ describe('Postgres user table unit tests', () => {
       };
 
       const res = await users.verifyUser(testLogin);
+
       expect(res).toEqual(false);
     });
 
@@ -93,6 +99,7 @@ describe('Postgres user table unit tests', () => {
     it('changes a user\'s password', async () => {      
       const newPassword = 'newPassword';
       const res = await users.updatePassword(id, newPassword);
+
       expect(res).not.toBeInstanceOf(Error);
       expect(res).toHaveProperty('_id');
     });
@@ -100,6 +107,7 @@ describe('Postgres user table unit tests', () => {
     it('deletes from users', async () => {
       const createdUser = await users.getById(id);
       const res = await users.deleteById(id);
+      
       expect(res).not.toBeInstanceOf(Error);
       expect(res).toEqual(createdUser);
     });
@@ -111,6 +119,7 @@ describe('Postgres user table unit tests', () => {
           const errUser = Object.assign({}, createUser);
           errUser[field] = '';
           const res = await users.createUser(errUser);
+
           expect(res).toBeInstanceOf(Error);
         }
       }
