@@ -1,8 +1,11 @@
 import React from 'react';
+import Login from '../components/Login';
 
 const MainContainer = () => {
   return(
-    <div id="main"></div>
+    <div id="main">
+      <Login />
+    </div>
   );
 }
 

@@ -7,8 +7,8 @@ import '../styles/base.scss';
 
 const App = () => {
   return (
-    <div>
-      <HeaderNav />
+    <div id="root">
+      <HeaderNav></HeaderNav>
       <MainContainer />
       <Footer />
     </div>
