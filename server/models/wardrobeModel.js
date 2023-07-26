@@ -7,6 +7,7 @@ const db = new Pool({
 
 const wardrobes = {};
 
+// create a new wardrobe
 wardrobes.createWardrobe = async (wardrobeObj) => {
   try {
     const {
@@ -31,6 +32,7 @@ wardrobes.createWardrobe = async (wardrobeObj) => {
   }
 };
 
+// delete a wardrobe
 wardrobes.deleteById = async (id) => {
   try {
     const delQuery = `
@@ -46,6 +48,7 @@ wardrobes.deleteById = async (id) => {
   }
 };
 
+// get a single wardrobe by _id
 wardrobes.getById = async (id) => {
   try {
     const queryWardrobe = `
@@ -62,6 +65,7 @@ wardrobes.getById = async (id) => {
   }
 };
 
+// get all the wardrobes
 wardrobes.getAll = async () => {
   try {
     const queryAll = `SELECT * FROM wardrobes`;
@@ -74,6 +78,7 @@ wardrobes.getAll = async () => {
   }
 };
 
+// update a wardrobe with a new name ONLY
 wardrobes.updateWardrobe = async (id, wardrobeObj) => {
   try {
     const { userId, name } = wardrobeObj;

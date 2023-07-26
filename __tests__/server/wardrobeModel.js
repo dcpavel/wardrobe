@@ -1,6 +1,5 @@
 const { wardrobes, db } = require('../../server/models/wardrobeModel');
 const { users } = require('../../server/models/userModel');
-const { Certificate } = require('crypto');
 
 describe('Postgres wardrobes table unit tests', () => {
   afterAll(async () => {
@@ -52,9 +51,9 @@ describe('Postgres wardrobes table unit tests', () => {
     });    
 
     it('reads from wardrobes', async () => {
-      const allUsers = await wardrobes.getAll();
-      expect(allUsers).toBeInstanceOf(Array);
-      expect(allUsers.length).toBeGreaterThan(0);
+      const allWardrobes = await wardrobes.getAll();
+      expect(allWardrobes).toBeInstanceOf(Array);
+      expect(allWardrobes.length).toBeGreaterThan(0);
     });
 
     it('gets a wardrobe by id', async () => {

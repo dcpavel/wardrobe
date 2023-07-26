@@ -134,7 +134,7 @@ users.updateUser = async (id, userObj) => {
 
     const updateQuery = `
       UPDATE users 
-      SET (firstname, lastname, email) = ( $1, $2, $3)
+      SET ( firstname, lastname, email ) = ( $1, $2, $3 )
       WHERE _id=$4
       RETURNING *;
     `;
@@ -142,7 +142,7 @@ users.updateUser = async (id, userObj) => {
       updateQuery,
       [ firstname, lastname, email, id ]
     );
-    
+
     return res.rows[0];
   } catch (err) {
     return err;
@@ -178,10 +178,6 @@ users.updatePassword = async (id, newPassword) => {
   }
 }
 
-/*
-  TODO:
-    Add a link to the schema chart once created
-*/
 module.exports = {
   users,
   db
