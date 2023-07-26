@@ -1,6 +1,6 @@
 const { users, db } = require('../../server/models/userModel');
 
-describe('Postgres unit tests', () => {
+describe('Postgres user table unit tests', () => {
 
   afterAll(() => {
     db.end();
@@ -37,6 +37,18 @@ describe('Postgres unit tests', () => {
       const allUsers = await users.getAll();
       expect(allUsers).toBeInstanceOf(Array);
       expect(allUsers.length).toBeGreaterThan(0);
+    });
+
+    it('gets a user by id', async () => {
+      const user = await users.getById(id);
+      expect(user).not.toBeInstanceOf(Error);
+      expect(user._id).toEqual(id);
+    });
+
+    it('gets a user by username', async () => {
+      const user = await users.getByUsername(createUser.username);
+      expect(user).not.toBeInstanceOf(Error);
+      expect(user._id).toEqual(id);
     });
 
     it('validates a correct password', async () => {
@@ -87,7 +99,7 @@ describe('Postgres unit tests', () => {
 
     it('deletes from users', async () => {
       const createdUser = await users.getById(id);
-      const res = await users.delById(id);
+      const res = await users.deleteById(id);
       expect(res).not.toBeInstanceOf(Error);
       expect(res).toEqual(createdUser);
     });

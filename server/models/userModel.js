@@ -84,13 +84,14 @@ users.createUser = async (userObj) => {
     const encPassword = await encryptPass(password);
 
     const createQuery = `
-    INSERT INTO users
-      ( firstname, lastname, username, password, email )
-    VALUES ($1, $2, $3, $4, $5)
-    RETURNING *;
+      INSERT INTO users
+        ( firstname, lastname, username, password, email )
+      VALUES ($1, $2, $3, $4, $5)
+      RETURNING *;
     `;
-    const res = await db.query(createQuery,
-      [firstname, lastname, username, encPassword, email]
+    const res = await db.query(
+      createQuery,
+      [ firstname, lastname, username, encPassword, email ]
     );
 
     return res.rows[0];
@@ -100,13 +101,14 @@ users.createUser = async (userObj) => {
 };
 
 // delete by id
-users.delById = async (id) => {
+users.deleteById = async (id) => {
   try {
     const delQuery = `
-      DELETE FROM users WHERE _id=$1
+      DELETE FROM users
+      WHERE _id=$1
       RETURNING *;
     `;
-    const res = await db.query(delQuery, [id]);
+    const res = await db.query(delQuery, [ id ]);
 
     return res.rows[0];
   } catch (err) {
@@ -136,7 +138,11 @@ users.updateUser = async (id, userObj) => {
       WHERE _id=$4
       RETURNING *;
     `;
-    const res = await db.query(updateQuery, [ firstname, lastname, email, id ]);
+    const res = await db.query(
+      updateQuery,
+      [ firstname, lastname, email, id ]
+    );
+    
     return res.rows[0];
   } catch (err) {
     return err;
@@ -159,7 +165,10 @@ users.updatePassword = async (id, newPassword) => {
       `;
       const encPassword = encryptPass(newPassword);
 
-      const res = await db.query(updateQuery, [ encPassword, id ]);
+      const res = await db.query(
+        updateQuery,
+        [ encPassword, id ]
+      );
       user = res.rows[0];
     }
 
@@ -173,4 +182,7 @@ users.updatePassword = async (id, newPassword) => {
   TODO:
     Add a link to the schema chart once created
 */
-module.exports = { users, db };
+module.exports = {
+  users,
+  db
+};
