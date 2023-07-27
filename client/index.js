@@ -10,7 +10,7 @@ import Landing from './containers/Landing';
 import Signup from './containers/Signup';
 import Wardrobe from './components/Wardrobe';
 import User from './components/User';
-import Main from './containers/Main';
+import Clothing from './components/Clothing';
 import HeaderNav from './containers/HeaderNav.jsx';
 
 import store from './store';
@@ -45,6 +45,10 @@ const router = createBrowserRouter([
       {
         element: <User />,
         path: "/user/:userId"
+      },
+      {
+        path: "/clothing",
+        element: <Clothing />
       }
     ]
   }

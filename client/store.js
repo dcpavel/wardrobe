@@ -1,14 +1,16 @@
 import { configureStore } from '@reduxjs/toolkit';
 import usersSlice from './reducers/usersReducer';
 import wardrobesReducer from './reducers/wardrobesReducer';
+import clothesReducer from './reducers/clothesReducer';
+import clothingTypesReducer from './reducers/clothingTypesReducer';
 
 // we are adding composeWithDevTools here to get easy access to the Redux dev tools
 const store = configureStore({
   reducer: {
     wardrobes: wardrobesReducer,
-    // clothing: clothingReducer,
+    clothes: clothesReducer,
     users: usersSlice,
-    // clothingType: clothingTypeReducer
+    clothingTypes: clothingTypesReducer
   }
 });
 

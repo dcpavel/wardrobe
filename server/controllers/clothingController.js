@@ -1,4 +1,9 @@
-const { clothes } = require('../models/clothingModel');
+import * as m from '../models/noSqlClothingModel';
+import * as p from '../models/sqlClothingModel';
+import fs from 'filesystem';
+
+const pClothes = p.clothes;
+const mClothes = m.clothes;
 
 const createErr = (errInfo) => {
   const { method, type, err } = errInfo
@@ -13,5 +18,9 @@ const createErr = (errInfo) => {
 }
 
 const clothingController = {};
+
+clothingController.create = (req, res, next) => {
+  
+}
 
 module.exports = clothingController;
