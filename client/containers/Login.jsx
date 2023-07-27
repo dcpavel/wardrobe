@@ -11,7 +11,6 @@ export async function loginAction() {
 
 const Login = () => {
   const dispatch = useDispatch();
-  // const fields = useSelector(state => state.fields);
   const errors = useSelector(state => state.errors);
 
   const loggedIn = useSelector(state => state.loggedIn);
