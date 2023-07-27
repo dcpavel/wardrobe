@@ -1,38 +1,44 @@
 import React from 'react';
 import { login, setVal } from '../reducers/usersReducer';
 import { useSelector, useDispatch } from 'react-redux';
-import { Form, Link } from 'react-router-dom';
+import { Form, Link, useSubmit, redirect } from 'react-router-dom';
 
-export async function loginAction() {
-  const user = await login();
-  console.log(user);
-  return { user };
+export async function action({ request }) {
+  const formData = await request.formData();
+  const values = Object.fromEntries(formData);
+
+  // error handling goes here?
+  const credentials = {
+    username: values.username,
+    password: values.password
+  };
+  const res = await fetch(
+    `http://localhost:8080/api/users/login/`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify(credentials)
+    }
+  )
+  if (res.ok) {
+    return redirect('/wardrobe/:userId');
+  } else {
+    // we need to do something here
+    return null;
+  }
 }
 
-const Login = () => {
-  const dispatch = useDispatch();
-  const errors = useSelector(state => state.errors);
-
-  const loggedIn = useSelector(state => state.loggedIn);
-  if (loggedIn) {
-    return <Redirect to="/wardrobe" />
-  }
-  console.log(loggedIn);
-
-  async function submit() {
-    dispatch(login());
-  }
-
-  function setField(field, value) {
-    dispatch(setVal({ field, value }));
-  }
+export default function Login() {
+  const submit = useSubmit();
 
   return(
     <div>
-      <h1>
+      <h2>
         Log In
-      </h1>
-      {/* <Form method='post' action='/api/users/login'> */}
+      </h2>
+      <Form method='post'>
         <label
           htmlFor="username"
         >Username: <span className="red">*</span></label>
@@ -41,8 +47,7 @@ const Login = () => {
           id="username"
           name="username"
           placeholder="username"
-          onChange={(e) => setField('username', e.target.value)}
-          onKeyDown={(e) => { if (e.key === 'Enter') submit()}}
+          // onKeyDown={(e) => { if (e.key === 'Enter') submit(e.currentTarget.form)}}
         ></input>    
         <label
           htmlFor="password"
@@ -52,15 +57,12 @@ const Login = () => {
           id="password"
           name="password"
           placeholder="password"
-          onChange={(e) => setField('password', e.target.value)}
-          onKeyDown={(e) => { if (e.key === 'Enter') submit()}}
+          // onKeyDown={(e) => { if (e.key === 'Enter') submit(e.currentTarget.form)}}
         ></input>   
         <button
-          onClick={submit}
+          type="submit"
         >Log In</button>
-      {/* </Form>          */}
+      </Form>         
     </div>
   );
 };
-
-export default Login;

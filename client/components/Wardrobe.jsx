@@ -2,6 +2,10 @@ import React from 'react';
 import { setVal, create } from '../reducers/wardrobesReducer';
 import { useDispatch } from 'react-redux';
 
+export async function loader({ params }) {
+  return;
+}
+
 const Wardrobe = () => {
   const dispatch = useDispatch();
 

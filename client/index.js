@@ -5,10 +5,14 @@ import { Provider } from 'react-redux';
 
 import App from './containers/App.jsx';
 import ErrorPage from './static/ErrorPage';
-import Login, { loginAction } from './containers/Login';
+import Login, {
+  action as loginAction
+} from './containers/Login';
 import Landing from './containers/Landing';
 import Signup from './containers/Signup';
-import Wardrobe from './components/Wardrobe';
+import Wardrobe, {
+  loader as wardrobeLoader
+} from './components/Wardrobe';
 import User from './components/User';
 import Clothing from './components/Clothing';
 import HeaderNav from './containers/HeaderNav.jsx';
@@ -33,14 +37,17 @@ const router = createBrowserRouter([
       {
         path: "/login",
         element: <Login />,
+        action: loginAction
       },
       {
         element: <Signup />,
         path: "/signup"
       },
       {
+        
+        path: "/wardrobe/:userid",
         element: <Wardrobe />,
-        path: "/wardrobe"
+        loader: wardrobeLoader
       },
       {
         element: <User />,

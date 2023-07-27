@@ -52,7 +52,7 @@ const usersSlice = createSlice({
         username: state.username,
         password: state.password
       }    
-      fetch(`http://localhost:8080/api/users/login/`, {
+      return fetch(`http://localhost:8080/api/users/login/`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -60,17 +60,8 @@ const usersSlice = createSlice({
           },
           body: JSON.stringify(credentials)
         })
-        .then((res) => {
-          console.log(res);
-          if (res.ok) {
-            return true;
-          } else {
-            return false;
-          }
-        })
-        .catch((err) => {
-          return err;
-        });
+        .then(res => res.ok)
+        .catch(err => err );
     }
   }
 });
