@@ -7,7 +7,7 @@ module.exports = {
   ],
   output: {
     path: path.resolve(__dirname, 'prod'),
-    filename: 'bundle.js'
+    filename: 'bundle.js',
   },
   devtool: 'eval-source-map',
   mode: process.env.NODE_ENV,
@@ -15,13 +15,13 @@ module.exports = {
     host: 'localhost',
     port: 8080,
     static: {
-      directory: path.resolve(__dirname, 'prod'),
+      directory: path.resolve(__dirname, 'dev'),
       publicPath: '/'     
     },
     proxy: {
-      '/api': 'http://localhost:3000'
+      '/api/': 'http://localhost:3000'
     },
-    compress: true
+    historyApiFallback: true,
   },
   resolve: {
     extensions: ['.js', '.jsx' ],
@@ -29,7 +29,7 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       title: 'Development',
-      template: './client/index.html'
+      template: 'client/index.html'
     }),
   ],
   module: {
@@ -41,15 +41,14 @@ module.exports = {
           loader: 'babel-loader',
           options: {
             presets: [
-              "@babel/preset-env",
-              "@babel/preset-react"
+              '@babel/preset-env',
+              '@babel/preset-react'
             ]
           }
         }]
       },
       {
         test: /\.s[ac]ss$/i,
-        exclude: /node_modules/,
         use: [
           'style-loader',
           'css-loader',

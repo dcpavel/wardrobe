@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 
 const HeaderLogin = () => {
   const linksArr = [
-    ['Home', '/'],
+    ['Home', '/home'],
     ['About', '/about'],
   ];
 
@@ -13,12 +13,10 @@ const HeaderLogin = () => {
     const [title, path] = link;
     links.push(
       <li key={title}>
-        {title}
-        {/* <Link to={path}>{title}</Link> */}
+        <Link to={path}>{title}</Link>
       </li>
     );
   }
-  console.log(links);
 
   return(
     <ul id="headerLinks">

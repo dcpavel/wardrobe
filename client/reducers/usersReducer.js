@@ -1,4 +1,3 @@
-import * as types from '../constants/actions';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 const checkRequiredFields = (payload) => {

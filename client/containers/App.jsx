@@ -1,18 +1,16 @@
-import React from 'react';
-import { createBrowserRouter, RouteProvider} from 'react-router-dom';
-import HeaderNav from './HeaderNav';
-import MainContainer from './MainContainer';
-import Footer from './Footer';
-import '../styles/base.scss';
 
-const App = () => {
+import React from 'react';
+import { Outlet } from 'react-router-dom';
+
+import HeaderNav from './HeaderNav';
+import Footer from './Footer';
+
+export default function App() {
   return (
-    <div id="root">
-      <HeaderNav></HeaderNav>
-      <MainContainer />
+    <div>
+      <HeaderNav />
+      <Outlet />
       <Footer />
     </div>
   );
 }
-
-export default App;

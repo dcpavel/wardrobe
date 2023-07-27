@@ -1,7 +1,3 @@
-@use 'modules/vars' as v;
-
-body {
-  background-color: v.$bg-color;
-}
-
+@import 'modules/vars';
+@import 'modules/body';
 

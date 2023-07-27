@@ -22,24 +22,23 @@ app.use(
   express.static(path.resolve(__dirname, '../client'))
 );
 
-// route handlers
-// home
-app.get('/',
-  (_, res) => {
-    res
-      .status(200)
-      .json(res.locals);
-  }
-);
-
 // database
 app.use('/api/users', userRouter);
 app.use('/api/wardrobes', wardrobeRouter);
 app.use('/api/clothes', clothingRouter);
 app.use('/api/clothingTypes', clothingTypeRouter);
 
+// route handlers
+// home
+app.get('/',
+  (_, res) => {
+    console.log(path.resolve(__dirname, 'client/index.html'))
+    res.sendFile(path.resolve(__dirname, 'client/index.html'));
+  }
+);
+
 // catch-all for unknown routes
-app.use((_, res) => {
+app.use('/api', (_, res) => {
   res
     .status(404)
     .send('This page does not exist')
