@@ -52,6 +52,9 @@ users.getByUsername = async (username) => {
 users.verifyUser = async ({ username, password }) => {
   try {
     const dbUser = await users.getByUsername(username);
+    if (!dbUser) {
+      return false;
+    }
     const dbPassword = dbUser.password;
 
     const res = await bcrypt.compare(password, dbPassword);

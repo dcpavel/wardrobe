@@ -51,12 +51,13 @@ userController.getUserInfo = async (req, res, next) => {
 userController.verifyUser = async (req, res, next) => {
   const { username, password } = req.body;
   if (!username || !password) {
-    res.locals.error = 'Invalide fields';
+    res.locals.error = 'Invalid fields';
   }
 
   const validUser = await users.verifyUser({ username, password });
   if (validUser) {
     res.locals.user = await users.getByUsername(username);
+    delete res.locals.user.password;
   } else {
     res.locals.error = 'Unauthorized User';
   }

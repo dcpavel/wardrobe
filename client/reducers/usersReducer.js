@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { redirect } from 'react-router';
 
 const checkRequiredFields = (payload) => {
   const reqFields = Object.keys(initialState);
@@ -28,7 +29,7 @@ const initialState = {
   email: '',
   errors: null,
   status: 'idle',
-  id: 0
+  loggedIn: false
 };
 
 const usersSlice = createSlice({
@@ -50,14 +51,23 @@ const usersSlice = createSlice({
       const credentials = {
         username: state.username,
         password: state.password
-      }
-      console.log(credentials);
-      fetch(`http://localhost:3000/api/users/login`, {
+      }    
+      fetch(`http://localhost:8080/api/users/login/`, {
           method: 'POST',
-          mode: 'no-cors',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
           body: JSON.stringify(credentials)
         })
-        .then(res => console.log(res))
+        .then((res) => {
+          console.log(res);
+          if (res.ok) {
+            return true;
+          } else {
+            return false;
+          }
+        })
         .catch((err) => {
           return err;
         });

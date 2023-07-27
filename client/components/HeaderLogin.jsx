@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 
 const HeaderLogin = () => {
   return(
-    <span>
+    <span id="headerLogin">
       <Link to="/login">Login</Link>
     </span>
   );

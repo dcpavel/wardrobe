@@ -40,13 +40,14 @@ router.post('/login',
   sessionController.startSession,
   cookieController.setSSIDCookie,
   (_, res) => {
-    console.log(res.locals);
     if (res.locals.error) {
-      return res.redirect('/login');
+      return res
+        .status(403)
+        .json({ error: res.locals.error });
     } else {
       return res
         .status(200)
-        .json(res.locals.user)
+        .json(res.locals.user);
     }
   }
 );

@@ -5,7 +5,7 @@ import { Provider } from 'react-redux';
 
 import App from './containers/App.jsx';
 import ErrorPage from './static/ErrorPage';
-import Login from './containers/Login';
+import Login, { loginAction } from './containers/Login';
 import Landing from './containers/Landing';
 import Signup from './containers/Signup';
 import Wardrobe from './components/Wardrobe';
@@ -23,12 +23,16 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />,
     children: [
       {
+        index: true,
+        element: <Landing />
+      },
+      {
         element: <Landing />,
         path: "/home"
       },
       {
+        path: "/login",
         element: <Login />,
-        path: "/login"
       },
       {
         element: <Signup />,
@@ -36,7 +40,7 @@ const router = createBrowserRouter([
       },
       {
         element: <Wardrobe />,
-        path: "/wardrobe/:wardrobeId"
+        path: "/wardrobe"
       },
       {
         element: <User />,

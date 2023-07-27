@@ -7,10 +7,11 @@ import Footer from './Footer';
 
 export default function App() {
   return (
-    <div>
+    <div id="main">
       <HeaderNav />
-      <Outlet />
-      <Footer />
+      <div id="active">
+        <Outlet />
+      </div>
     </div>
   );
 }

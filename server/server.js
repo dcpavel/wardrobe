@@ -19,26 +19,25 @@ app.use(cookieParser());
 
 // handle requests for static files
 app.use(
-  express.static(path.resolve(__dirname, '../client'))
+  express.static(path.resolve(__dirname, 'client'))
 );
-
+  
+// home
+app.get('/',
+  (_, res) => {
+    res.sendFile(path.resolve(__dirname, 'client/index.html'));
+  }
+);
+  
+// route handlers
 // database
 app.use('/api/users', userRouter);
 app.use('/api/wardrobes', wardrobeRouter);
 app.use('/api/clothes', clothingRouter);
 app.use('/api/clothingTypes', clothingTypeRouter);
 
-// route handlers
-// home
-app.get('/',
-  (_, res) => {
-    console.log(path.resolve(__dirname, 'client/index.html'))
-    res.sendFile(path.resolve(__dirname, 'client/index.html'));
-  }
-);
-
 // catch-all for unknown routes
-app.use('/api', (_, res) => {
+app.use('/', (_, res) => {
   res
     .status(404)
     .send('This page does not exist')
