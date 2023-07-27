@@ -128,5 +128,6 @@ clothes.deleteById = (id) => {
 
 module.exports = {
   db,
-  clothes
+  clothes,
+  p: clothes
 };

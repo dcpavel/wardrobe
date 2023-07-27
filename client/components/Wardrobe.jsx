@@ -5,7 +5,7 @@ export async function loader({ params }) {
   let wardrobe = {};
   
   if (params.id) {  
-    const res = fetch(`http://localhost:8080/api/wardrobes/${params.id}`);
+    const res = await fetch(`http://localhost:8080/api/wardrobes/${params.id}`);
     wardrobe = await res.json();
   }
 
@@ -41,7 +41,8 @@ export default function Wardrobe() {
 
   return(
     <Form method="post">
-      <h1>Create Wardrobe</h1>
+      <h1>
+        { (wardrobe.name) ? `Update ${wardrobe.name}` : 'Create' } Wardrobe</h1>
       <label
         htmlFor="name"
       >Wardrobe name: <span className="red">*</span></label>
@@ -50,6 +51,7 @@ export default function Wardrobe() {
         id="name"
         name="name"
         placeholder="Summer..."
+        value={ (wardrobe.name) ? wardrobe.name : ''}
       ></input>
       <button type="submit" >Save Wardrobe</button>
       <button

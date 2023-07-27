@@ -1,4 +1,6 @@
 const express = require('express');
+const sessionController = require('../controllers/sessionController');
+const clothingController = require('../controllers/clothingController');
 
 // require any necessary controllers here
 // const clothingController = require('../controllers/clothingController);
@@ -15,6 +17,8 @@ router.get('/:id',
 
 // get all the clothes belonging to a wardrobe
 router.get('/wardrobe/:id',
+  sessionController.isLoggedIn,
+  clothingController.getAllByWardrobe,
   (_, res) => {
     return res
       .status(200)

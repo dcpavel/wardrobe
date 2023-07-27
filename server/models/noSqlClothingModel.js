@@ -10,7 +10,6 @@ const Schema = mongoose.Schema;
 */ 
 
 const clothingSchema = new Schema({
-  _id: { type: Number, required: true, unique: true},
   name: { type: String, required: true },
   link: String,
   colors: Array,
@@ -22,6 +21,6 @@ const clothingSchema = new Schema({
 const clothes = mongoose.model('clothes', clothingSchema);
 
 module.exports = {
-  db,
-  clothes
+  clothes,
+  m: clothes
 };

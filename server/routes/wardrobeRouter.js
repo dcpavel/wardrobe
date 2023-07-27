@@ -21,7 +21,7 @@ router.get('/:id',
   (_, res) => {
     return res
       .status(200)
-      .json(res.locals.wardrobes);
+      .json(res.locals.wardrobe);
   }
 );
   

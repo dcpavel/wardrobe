@@ -37,10 +37,12 @@ wardrobeController.create = async (req, res, next) => {
 }
 
 wardrobeController.getOneById = async (req, res, next) => {
-  console.log(req.params);
   const { id } = req.params;
   
   try {
+    const wardrobe = await wardrobes.getById(id);
+    res.locals.wardrobe = wardrobe;
+
     return next();
   } catch (err) {
     return next(createErr({

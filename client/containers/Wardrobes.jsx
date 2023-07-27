@@ -25,10 +25,10 @@ export default function Wardrobes() {
             <ul>
               {wardrobes.map((wardrobe) => (
                 <li key={wardrobes.id}>
-                  <Link to={`/clothes/${wardrobe.id}`} >
+                  <Link to={`/clothes/${wardrobe._id}`} >
                     {wardrobe.name}
                   </Link>
-                  <Link to={`wardrobe/edit/${wardrobe.id}`}>
+                  <Link to={`/wardrobe/edit/${wardrobe._id}`}>
                     Edit
                   </Link>
                 </li>

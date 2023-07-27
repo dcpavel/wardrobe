@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom/client';
-import { createBrowserRouter, RouterProvider, Outlet } from 'react-router-dom';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { Provider } from 'react-redux';
 
 import App from './containers/App.jsx';
@@ -19,7 +19,9 @@ import Wardrobe, {
   action as wardrobeAction
 } from './components/Wardrobe';
 import User from './components/User';
-import Clothing from './components/Clothing';
+import Clothes, {
+  loader as clothesLoader
+} from './containers/Clothes';
 
 import store from './store';
 import './styles/base.scss';
@@ -71,7 +73,8 @@ const router = createBrowserRouter([
       },
       {
         path: "/clothes/:wardrobeid",
-        element: <Clothing />
+        element: <Clothes />,
+        loader: clothesLoader
       }
     ]
   }
