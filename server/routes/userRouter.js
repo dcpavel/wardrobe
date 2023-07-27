@@ -16,6 +16,16 @@ router.get('/',
   }
 );
 
+router.get('/:id',
+  // TODO: ADD USER VERIFICATION BEFORE DISPLAYING
+  userController.getUserInfo,
+  (_, res) => {
+    return res
+      .status(200)
+      .json(res.locals.user);
+  }
+);
+
 router.post('/',
   userController.createUser,
   (_, res) => {
@@ -25,15 +35,18 @@ router.post('/',
   }
 );
 
-router.get('/login',
+router.post('/login',
   userController.verifyUser,
   sessionController.startSession,
   cookieController.setSSIDCookie,
   (_, res) => {
+    console.log(res.locals);
     if (res.locals.error) {
       return res.redirect('/login');
     } else {
-      return res.redirect('/wardrobe');
+      return res
+        .status(200)
+        .json(res.locals.user)
     }
   }
 );

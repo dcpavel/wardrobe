@@ -6,7 +6,7 @@ const store = configureStore({
   reducer: {
     // wardrobe: wardrobeReducer,
     // clothing: clothingReducer,
-    users: usersSlice.reducer,
+    users: usersSlice,
     // clothingType: clothingTypeReducer
   }
 });

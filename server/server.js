@@ -5,7 +5,7 @@ const cookieParser = require('cookie-parser');
 const { PORT,  MONGO_URI } = require('./envVars');
 
 const app = express();
-mongoose.connect(MONGO_URI);
+mongoose.connect(MONGO_URI, { dbName: 'wardrobe' });
 
 // require routers
 const userRouter = require('./routes/userRouter');

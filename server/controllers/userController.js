@@ -41,8 +41,27 @@ userController.createUser = (req, res, next) => {
   return next();
 };
 
-userController.login = (req, res, next) => {
+userController.getUserInfo = async (req, res, next) => {
+  const id = req.params.id;
+  res.locals.user = await users.getById(id);
 
+  return next();
+};
+
+userController.verifyUser = async (req, res, next) => {
+  const { username, password } = req.body;
+  if (!username || !password) {
+    res.locals.error = 'Invalide fields';
+  }
+
+  const validUser = await users.verifyUser({ username, password });
+  if (validUser) {
+    res.locals.user = await users.getByUsername(username);
+  } else {
+    res.locals.error = 'Unauthorized User';
+  }
+
+  return next();
 };
 
 module.exports = userController;

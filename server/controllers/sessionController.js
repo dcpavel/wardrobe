@@ -28,14 +28,17 @@ sessionController.startSession = async (req, res, next) => {
     if (!res.locals.user) {
       return next();
     }
-    await Session.create({
+
+    const ssidCookie = {
       cookieId: res.locals.user._id
-    });
+    };
+    const session = await Session.findOneAndUpdate( ssidCookie, ssidCookie, { upsert: true });
 
     return next();
   } catch (err) {
     return next(createErr({
       method: 'startSession',
+      type: 'Something has occurred when creating the cookie',
       err
     }));
   }
