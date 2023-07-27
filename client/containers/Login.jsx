@@ -1,7 +1,7 @@
 import React from 'react';
 import { login, setVal } from '../reducers/usersReducer';
 import { useSelector, useDispatch } from 'react-redux';
-import { Form, Link, useSubmit, redirect } from 'react-router-dom';
+import { Form, Link, useSubmit, redirect, json } from 'react-router-dom';
 
 export async function action({ request }) {
   const formData = await request.formData();
@@ -13,7 +13,8 @@ export async function action({ request }) {
     password: values.password
   };
   const res = await fetch(
-    `http://localhost:8080/api/users/login/`, {
+    `http://localhost:8080/api/users/login/`,
+    {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -22,8 +23,10 @@ export async function action({ request }) {
       body: JSON.stringify(credentials)
     }
   )
+  let user = await res.json();
+
   if (res.ok) {
-    return redirect('/wardrobe/:userId');
+    return redirect(`/wardrobes/${user._id}`);
   } else {
     // we need to do something here
     return null;

@@ -1,24 +1,46 @@
 import React from 'react';
-import { setVal, create } from '../reducers/wardrobesReducer';
-import { useDispatch } from 'react-redux';
+import { Form, useLoaderData, redirect, useNavigate } from 'react-router-dom';
 
 export async function loader({ params }) {
-  return;
+  let wardrobe = {};
+  
+  if (params.id) {  
+    const res = fetch(`http://localhost:8080/api/wardrobes/${params.id}`);
+    wardrobe = await res.json();
+  }
+
+  return { wardrobe };
 }
 
-const Wardrobe = () => {
-  const dispatch = useDispatch();
+export async function action({ request }) {
+  const formData = await request.formData();
+  const updates = Object.fromEntries(formData);
 
-  async function submit() {
-    dispatch(create());
-  }
+  const res = await fetch(
+    `http://localhost:8080/api/wardrobes/`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify(updates)
+    }
+  )
 
-  function setField(field, value) {
-    dispatch(setVal({ field, value }));
+  // do something with the response
+  if (res.ok) {
+    return redirect(`/wardrobes/`);
   }
+  return null;
+}
+
+export default function Wardrobe() {
+  const { wardrobe } = useLoaderData();
+  const navigate = useNavigate();
 
   return(
-    <section>
+    <Form method="post">
       <h1>Create Wardrobe</h1>
       <label
         htmlFor="name"
@@ -28,14 +50,12 @@ const Wardrobe = () => {
         id="name"
         name="name"
         placeholder="Summer..."
-        onChange={(e) => setField('name', e.target.value)}
-        onKeyDown={(e) => { if (e.key === 'Enter') submit()}}
       ></input>
+      <button type="submit" >Save Wardrobe</button>
       <button
-        onClick={submit}
-      >Create</button>
-    </section>
+        type="button"
+        onClick={() => navigate(-1)}
+      >Back</button>
+    </Form>
   );
 }
-
-export default Wardrobe;

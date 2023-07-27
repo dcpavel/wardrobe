@@ -10,12 +10,16 @@ import Login, {
 } from './containers/Login';
 import Landing from './containers/Landing';
 import Signup from './containers/Signup';
+import Wardrobes, {
+  loader as wardrobesLoader,
+  action as wardrobesAction
+} from './containers/Wardrobes';
 import Wardrobe, {
-  loader as wardrobeLoader
+  loader as wardrobeLoader,
+  action as wardrobeAction
 } from './components/Wardrobe';
 import User from './components/User';
 import Clothing from './components/Clothing';
-import HeaderNav from './containers/HeaderNav.jsx';
 
 import store from './store';
 import './styles/base.scss';
@@ -43,18 +47,30 @@ const router = createBrowserRouter([
         element: <Signup />,
         path: "/signup"
       },
+      {       
+        path: "/wardrobes/:userid",
+        element: <Wardrobes />,
+        loader: wardrobesLoader,
+        action: wardrobesAction
+      },
       {
-        
-        path: "/wardrobe/:userid",
+        path: "/wardrobe/edit/",
         element: <Wardrobe />,
-        loader: wardrobeLoader
+        loader: wardrobeLoader,
+        action: wardrobeAction
+      },
+      {
+        path: "/wardrobe/edit/:id",
+        element: <Wardrobe />,
+        loader: wardrobeLoader,
+        action: wardrobeAction
       },
       {
         element: <User />,
         path: "/user/:userId"
       },
       {
-        path: "/clothing",
+        path: "/clothes/:wardrobeid",
         element: <Clothing />
       }
     ]

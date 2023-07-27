@@ -1,3 +1,4 @@
+const { resolvePath } = require('react-router');
 const { wardrobes } = require('../models/wardrobeModel');
 
 const createErr = (errInfo) => {
@@ -17,7 +18,7 @@ const wardrobeController = {};
 wardrobeController.create = async (req, res, next) => {
   const newWardrobe = {
     name: req.body.name,
-    userId: Number(req.cookies.SSID)
+    userId: res.locals.user._id
   }
   console.log(newWardrobe);
 
@@ -31,7 +32,39 @@ wardrobeController.create = async (req, res, next) => {
       method: 'create',
       type: 'Error creating new wardrobe',
       err
-    }))
+    }));
+  }
+}
+
+wardrobeController.getOneById = async (req, res, next) => {
+  console.log(req.params);
+  const { id } = req.params;
+  
+  try {
+    return next();
+  } catch (err) {
+    return next(createErr({
+      method: 'getOneById',
+      type: 'Error querying by id',
+      err
+    }));
+  }
+}
+
+wardrobeController.getByUserId = async (req, res, next) => {
+  const { id } = req.params;
+  
+  try {
+    const wardrobeList = await wardrobes.getAllByUserId(id);
+    res.locals.wardrobes = wardrobeList;
+
+    return next();
+  } catch (err) {
+    return next(createErr({
+      method: 'getByUserId',
+      type: 'Error querying by user id',
+      err
+    }));
   }
 }
 

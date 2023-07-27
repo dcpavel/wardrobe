@@ -2,7 +2,12 @@ import React from 'react';
 import { setVal, create } from '../reducers/clothingTypesReducer';
 import { useDispatch } from 'react-redux';
 
-const ClothingTypes = () => {
+export async function loader({ params }) {
+  const types = await getContact(params.userId);
+  return { types };
+}
+
+export default function ClothingTypes()  {
   const dispatch = useDispatch();
 
   async function submit() {
@@ -43,5 +48,3 @@ const ClothingTypes = () => {
     </section>
   );
 }
-
-export default ClothingTypes;

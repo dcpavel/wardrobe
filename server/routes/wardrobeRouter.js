@@ -15,6 +15,26 @@ router.get('/',
   }
 );
 
+router.get('/:id',
+  sessionController.isLoggedIn,
+  wardrobeController.getOneById,
+  (_, res) => {
+    return res
+      .status(200)
+      .json(res.locals.wardrobes);
+  }
+);
+  
+router.get('/user/:id',
+  // sessionController.isLoggedIn,
+  wardrobeController.getByUserId,
+  (_, res) => {
+    return res
+      .status(200)
+      .json(res.locals.wardrobes);
+  }
+);
+
 router.post('/',
   sessionController.isLoggedIn,
   wardrobeController.create,

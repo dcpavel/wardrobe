@@ -63,9 +63,22 @@ wardrobes.getById = async (id) => {
 // get all the wardrobes
 wardrobes.getAll = async () => {
   try {
-    const queryAll = `SELECT * FROM wardrobes`;
+    const queryAll = `SELECT * FROM wardrobes;`;
 
     const res = await db.query(queryAll);
+
+    return res.rows;
+  } catch (err) {
+    return err;
+  }
+};
+
+// get all the wardrobes by user id
+wardrobes.getAllByUserId = async (id) => {
+  try {
+    const queryAll = `SELECT * FROM wardrobes WHERE userid=$1;`;
+
+    const res = await db.query(queryAll, [ id ]);
 
     return res.rows;
   } catch (err) {
