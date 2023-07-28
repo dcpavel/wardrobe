@@ -1,25 +1,42 @@
 import React from 'react';
 import usersSlice from '../reducers/usersReducer';
 import { useSelector, useDispatch } from 'react-redux';
+import { Form, redirect } from 'react-router-dom';
+
+export async function action({ request }) {
+  const formData = await request.formData();
+  const values = Object.fromEntries(formData);
+
+  // error handling goes here?
+  const res = await fetch(
+    `http://localhost:8080/api/users/`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify(values)
+    }
+  )
+  let user = await res.json();
+  console.log(user);
+
+  if (res.ok) {
+    return redirect(`/login`);
+  } else {
+    // we need to do something here
+    return null;
+  }
+}
 
 const Signup = () => {
-  const dispatch = useDispatch();
-  // const fields = useSelector(state => state.fields);
-  const errors = useSelector(state => state.errors);
-
-  function submit() {
-    dispatch(usersSlice.actions.addUser());    
-  }
-
-  function setField(field, value) {
-    dispatch(usersSlice.actions.setField({ field, value }));
-  }
-
   return(
     <div>
       <h1>
         Sign Up
       </h1>
+      <Form method="POST">
       <label
         htmlFor="firstname"
       >First Name: <span className="red">*</span></label>
@@ -28,7 +45,7 @@ const Signup = () => {
         id="firstname"
         name="firstname"
         placeholder="Cher"
-        onChange={(e) => setField('firstname', e.target.value)}
+        // onChange={(e) => setField('firstname', e.target.value)}
       ></input>      
       <label
         htmlFor="lastname"
@@ -38,7 +55,7 @@ const Signup = () => {
         id="lastname"
         name="lastname"
         placeholder="Horowitz"
-        onChange={(e) => setField('lastname', e.target.value)}
+        // onChange={(e) => setField('lastname', e.target.value)}
       ></input>    
       <label
         htmlFor="username"
@@ -48,7 +65,7 @@ const Signup = () => {
         id="username"
         name="username"
         placeholder="username"
-        onChange={(e) => setField('username', e.target.value)}
+        // onChange={(e) => setField('username', e.target.value)}
       ></input>    
       <label
         htmlFor="password"
@@ -58,7 +75,7 @@ const Signup = () => {
         id="password"
         name="password"
         placeholder="password"
-        onChange={(e) => setField('username', e.target.value)}
+        // onChange={(e) => setField('username', e.target.value)}
       ></input>    
       <label
         htmlFor="email"
@@ -68,11 +85,12 @@ const Signup = () => {
         id="email"
         name="email"
         placeholder="as@if.com"
-        onChange={(e) => setField('email', e.target.value)}
+        // onChange={(e) => setField('email', e.target.value)}
       ></input>    
       <button
-        onClick={submit}
+        type="submit"
       >Sign Up</button>
+      </Form>
     </div>
   );
 };

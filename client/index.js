@@ -9,7 +9,9 @@ import Login, {
   action as loginAction
 } from './containers/Login';
 import Landing from './containers/Landing';
-import Signup from './containers/Signup';
+import Signup, {
+  action as signupAction
+} from './containers/Signup';
 import Wardrobes, {
   loader as wardrobesLoader,
   action as wardrobesAction
@@ -52,7 +54,8 @@ const router = createBrowserRouter([
       },
       {
         element: <Signup />,
-        path: "/signup"
+        path: "/signup",
+        action: signupAction
       },
       {       
         path: "/wardrobes/:userid",

@@ -61,7 +61,8 @@ export default function Login() {
           name="password"
           placeholder="password"
           // onKeyDown={(e) => { if (e.key === 'Enter') submit(e.currentTarget.form)}}
-        ></input>   
+        ></input>
+        <Link to="/signup">Signup</Link>   
         <button
           type="submit"
         >Log In</button>

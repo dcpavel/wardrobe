@@ -2,12 +2,11 @@ import React from 'react';
 import { useLoaderData, Form, useNavigation, redirect } from 'react-router-dom';
 
 export async function loader({ params }) {
-  let clothing =  [];
   const clothingId = (params.id) ? params.id : '';
   const res = await fetch(`http://localhost:8080/api/clothes/${clothingId}`);
-  clothing = await res.json()
+  const clothingData = await res.json()
 
-  return { clothing };
+  return clothingData;
 }
 
 export async function action({ request }) {
@@ -35,9 +34,8 @@ export async function action({ request }) {
 }
 
 export default function Clothing() {
-  const { clothing } = useLoaderData();
+  const { clothing, types, wardrobes } = useLoaderData();
   const navigate = useNavigation();
-  console.log(clothing);
 
   return (
     <>
@@ -49,7 +47,7 @@ export default function Clothing() {
           name='type'
           defaultValue={clothing.typeid}
         >
-          {clothing.types.map((type) => (
+          {types.map((type) => (
             <option value={type._id}>{type.name}</option>
           ))};
         </select>
@@ -59,7 +57,7 @@ export default function Clothing() {
           name="wardrobe"
           defaultValue={clothing.wardrobeid}
         >
-          {clothing.wardrobes.map((wardrobe) => (
+          {wardrobes.map((wardrobe) => (
             <option value={wardrobe._id}>{wardrobe.name}</option>
           ))};
         </select>
@@ -69,19 +67,19 @@ export default function Clothing() {
           name="name"
           defaultValue={clothing.name}
         ></input>
-        <label htmlFor="colors">Please enter colors separated by spaces (e.g. blue gray should be blue-gray)</label>
+        <label htmlFor="colors">Please enter colors separated by commas</label>
         <input
           type="textbox"
           name="colors"
           defaultValue={clothing.colors}
         ></input>
-        <label htmlFor='patterns'>Please enter the patterns separated by spaces</label>
+        <label htmlFor='patterns'>Please enter the patterns separated by commas</label>
         <input
           type="textbox"
           name='patterns'
           defaultValue={clothing.patterns}
         ></input>
-        <label htmlFor='fabric'>Please enter the fabrics separated by spaces</label>
+        <label htmlFor='fabric'>Please enter the fabrics separated by commas</label>
         <input
           type="textbox"
           name='fabrics'
@@ -92,12 +90,17 @@ export default function Clothing() {
           name='id'
           defaultValue={clothing._id}
         ></input>
-        {/* <label htmlFor='picture'>Please choose a picture</label>
+        <input
+          type="hidden"
+          name='nosqlkey'
+          defaultValue={clothing.nosqlkey}
+        ></input>
+        <label htmlFor='picture'>Please choose a picture</label>
         {(clothing.picture) ? (<img src={`html://localhost:8080/picture/${picture}`} />) : ''}
         <input
           type='file'
           name='picture'
-        ></input> */}
+        ></input>
         <span className="buttons">
           <button type="submit">
             {(clothing.name) ? 'Save' : 'Add'}

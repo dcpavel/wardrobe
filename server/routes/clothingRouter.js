@@ -9,14 +9,14 @@ const clothingTypeController = require('../controllers/clothingTypeController');
 
 const router = express.Router();
 
-router.get('/',
+// get all the clothes belonging to a wardrobe
+router.get('/wardrobe/:id',
   sessionController.isLoggedIn,
-  wardrobeController.getByUserId,
-  clothingTypeController.getAll,
+  clothingController.getAllByWardrobe,
   (_, res) => {
     return res
       .status(200)
-      .json(res.locals);
+      .json(res.locals.clothes)
   }
 );
 
@@ -32,14 +32,14 @@ router.get('/:id',
   }
 );
 
-// get all the clothes belonging to a wardrobe
-router.get('/wardrobe/:id',
+router.get('/',
   sessionController.isLoggedIn,
-  clothingController.getAllByWardrobe,
+  wardrobeController.getByUserId,
+  clothingTypeController.getAll,
   (_, res) => {
     return res
       .status(200)
-      .json(res.locals.clothes)
+      .json(res.locals);
   }
 );
 
@@ -49,11 +49,13 @@ router.post('/',
   (_, res) => {
     return res
       .status(201)
-      .json(res.locals.clothing)
+      .json(res.locals.clothingc)
   }
 );
 
 router.put('/:id',
+  sessionController.isLoggedIn,
+  clothingController.update,
   (_, res) => {
     return res
       .status(201)
