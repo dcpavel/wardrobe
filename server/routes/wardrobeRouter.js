@@ -26,7 +26,7 @@ router.get('/:id',
 );
   
 router.get('/user/:id',
-  // sessionController.isLoggedIn,
+  sessionController.isLoggedIn,
   wardrobeController.getByUserId,
   (_, res) => {
     return res
@@ -38,6 +38,16 @@ router.get('/user/:id',
 router.post('/',
   sessionController.isLoggedIn,
   wardrobeController.create,
+  (_, res) => {
+    return res
+      .status(201)
+      .json(res.locals.wardrobe)
+  }
+);
+
+router.post('/:id',
+  sessionController.isLoggedIn,
+  wardrobeController.update,
   (_, res) => {
     return res
       .status(201)

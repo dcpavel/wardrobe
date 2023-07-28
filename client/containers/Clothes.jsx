@@ -5,6 +5,7 @@ export async function loader({ params }) {
   const wardrobeId = params.wardrobeid;
   const res = await fetch(`http://localhost:8080/api/clothes/wardrobe/${wardrobeId}`);
   const clothes = await res.json();
+  console.log(clothes);
 
   return { clothes };
 }
@@ -27,7 +28,7 @@ export default function Clothes() {
                 <img src={clothing.thumbnail} />
                 <span className='clothing'>{clothing.name}</span>
                 <span className='moreInfo'></span>
-                <Link to={`/clothing/${id}`}>Edit</Link>
+                <Link to={`/clothing/${clothing._id}`}>Edit</Link>
               </li>
             ))}
           </ul>

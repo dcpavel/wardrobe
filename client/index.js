@@ -20,8 +20,13 @@ import Wardrobe, {
 } from './components/Wardrobe';
 import User from './components/User';
 import Clothes, {
-  loader as clothesLoader
+  loader as clothesLoader,
+  action as clothesAction
 } from './containers/Clothes';
+import Clothing, {
+  loader as clothingLoader,
+  action as clothingAction
+} from './components/Clothing';
 
 import store from './store';
 import './styles/base.scss';
@@ -74,8 +79,21 @@ const router = createBrowserRouter([
       {
         path: "/clothes/:wardrobeid",
         element: <Clothes />,
-        loader: clothesLoader
-      }
+        loader: clothesLoader,
+        action: clothesAction
+      },
+      {
+        path: "/clothing/",
+        element: <Clothing />,
+        loader: clothingLoader,
+        action: clothingAction
+      },
+      {
+        path: "/clothing/:id",
+        element: <Clothing />,
+        loader: clothingLoader,
+        action: clothingAction
+      }      
     ]
   }
 ]);

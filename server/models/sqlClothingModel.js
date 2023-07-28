@@ -9,7 +9,7 @@ const { db } = require('../envVars');
 */ 
 const clothes = {};
 
-clothes.createClothing = (clothingObj) => {
+clothes.createClothing = async (clothingObj) => {
   try {
     const {
       wardrobeId,
@@ -24,7 +24,7 @@ clothes.createClothing = (clothingObj) => {
       RETURNING *;
     `;
 
-    const res = db.query(
+    const res = await db.query(
       createQuery,
       [ wardrobeId, typeId, noSqlKey ]
     );
@@ -35,11 +35,11 @@ clothes.createClothing = (clothingObj) => {
   }
 };
 
-clothes.getById = (id) => {
+clothes.getById = async (id) => {
   try {
     const getQuery = `SELECT * FROM clothing WHERE _id=$1;`;
 
-    const res = db.query( getQuery, [ id ] );
+    const res = await db.query( getQuery, [ id ] );
 
     return res.rows[0];
   } catch (err) {
@@ -47,11 +47,11 @@ clothes.getById = (id) => {
   }
 };
 
-clothes.getByNoSqlKey = (key) => {
+clothes.getByNoSqlKey = async (key) => {
   try {
     const getQuery = `SELECT * FROM clothing WHERE nosqlkey=$1;`;
 
-    const res = db.query( getQuery, [ key ] );
+    const res = await db.query( getQuery, [ key ] );
 
     return res.rows[0];
   } catch (err) {
@@ -59,11 +59,11 @@ clothes.getByNoSqlKey = (key) => {
   }
 }
 
-clothes.getByWordrobeId = (id) => {
+clothes.getByWardrobeId = async (id) => {
   try {
     const getQuery = `SELECT * FROM clothing WHERE wardrobeid=$1;`;
 
-    const res = db.query( getQuery, [ id ] );
+    const res = await db.query( getQuery, [ id ] );
 
     return res.rows;
   } catch (err) {
@@ -71,11 +71,11 @@ clothes.getByWordrobeId = (id) => {
   }
 }
 
-clothes.getAll = () => {
+clothes.getAll = async () => {
   try {
     const getQuery = `SELECT * FROM clothing;`;
 
-    const res = db.query( getQuery);
+    const res = await db.query( getQuery);
 
     return res.rows;
   } catch (err) {
@@ -83,7 +83,7 @@ clothes.getAll = () => {
   }
 }
 
-clothes.updateClothing = (id, clothingObj) => {
+clothes.updateClothing = async (id, clothingObj) => {
   try {
     const { typeId } = clothingObj;
 
@@ -99,7 +99,7 @@ clothes.updateClothing = (id, clothingObj) => {
       RETURNING *;
     `;
 
-    const res = db.query(
+    const res = await db.query(
       updateQuery,
       [ typeId, id ]
     );
@@ -110,7 +110,7 @@ clothes.updateClothing = (id, clothingObj) => {
   }
 };
 
-clothes.deleteById = (id) => {
+clothes.deleteById = async (id) => {
   try {
     const deleteQuery = `
       DELETE FROM clothing
@@ -118,7 +118,7 @@ clothes.deleteById = (id) => {
       RETURNING *;
     `;
 
-    const res = db.query( deleteQuery, [ id ] )
+    const res = await db.query( deleteQuery, [ id ] )
 
     return res.rows[0];
   } catch (err) {

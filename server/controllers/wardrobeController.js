@@ -20,7 +20,6 @@ wardrobeController.create = async (req, res, next) => {
     name: req.body.name,
     userId: res.locals.user._id
   }
-  console.log(newWardrobe);
 
   try {
     const wardrobe = await wardrobes.createWardrobe(newWardrobe);
@@ -54,9 +53,9 @@ wardrobeController.getOneById = async (req, res, next) => {
 }
 
 wardrobeController.getByUserId = async (req, res, next) => {
-  const { id } = req.params;
-  
   try {
+    const id = res.locals.user._id;
+
     const wardrobeList = await wardrobes.getAllByUserId(id);
     res.locals.wardrobes = wardrobeList;
 
@@ -65,6 +64,27 @@ wardrobeController.getByUserId = async (req, res, next) => {
     return next(createErr({
       method: 'getByUserId',
       type: 'Error querying by user id',
+      err
+    }));
+  }
+}
+
+wardrobeController.update = async (req, res, next) => {
+  const newWardrobe = {
+    name: req.body.name,
+    userId: res.locals.user._id,
+    _id: Number(req.body._id)
+  }
+
+  try {
+    const updateWardrobe = await wardrobes.updateWardrobe(newWardrobe._id, newWardrobe);
+    res.locals.wardrobe = updateWardrobe;
+
+    return next();
+  } catch (err) {
+    return next(createErr({
+      method: 'create',
+      type: 'Error creating new wardrobe',
       err
     }));
   }

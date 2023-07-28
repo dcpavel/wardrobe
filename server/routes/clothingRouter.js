@@ -1,17 +1,34 @@
 const express = require('express');
 const sessionController = require('../controllers/sessionController');
 const clothingController = require('../controllers/clothingController');
+const wardrobeController = require('../controllers/wardrobeController');
+const clothingTypeController = require('../controllers/clothingTypeController');
 
 // require any necessary controllers here
 // const clothingController = require('../controllers/clothingController);
 
 const router = express.Router();
 
-router.get('/:id',
+router.get('/',
+  sessionController.isLoggedIn,
+  wardrobeController.getByUserId,
+  clothingTypeController.getAll,
   (_, res) => {
     return res
       .status(200)
-      .json(res.locals.clothes);
+      .json(res.locals);
+  }
+);
+
+router.get('/:id',
+  sessionController.isLoggedIn,
+  wardrobeController.getByUserId,
+  clothingTypeController.getAll,
+  clothingController.getById,
+  (_, res) => {
+    return res
+      .status(200)
+      .json(res.locals);
   }
 );
 
@@ -26,11 +43,13 @@ router.get('/wardrobe/:id',
   }
 );
 
-router.post('/:id',
+router.post('/',
+  sessionController.isLoggedIn,
+  clothingController.create,
   (_, res) => {
     return res
       .status(201)
-      .json(res.locals.clothes)
+      .json(res.locals.clothing)
   }
 );
 

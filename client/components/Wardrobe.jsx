@@ -2,7 +2,7 @@ import React from 'react';
 import { Form, useLoaderData, redirect, useNavigate } from 'react-router-dom';
 
 export async function loader({ params }) {
-  let wardrobe = {};
+  let wardrobe = { userid: params.id };
   
   if (params.id) {  
     const res = await fetch(`http://localhost:8080/api/wardrobes/${params.id}`);
@@ -15,9 +15,10 @@ export async function loader({ params }) {
 export async function action({ request }) {
   const formData = await request.formData();
   const updates = Object.fromEntries(formData);
+  console.log(updates);
 
   const res = await fetch(
-    `http://localhost:8080/api/wardrobes/`,
+    `http://localhost:8080/api/wardrobes/${updates._id}`,
     {
       method: 'POST',
       headers: {
@@ -30,7 +31,7 @@ export async function action({ request }) {
 
   // do something with the response
   if (res.ok) {
-    return redirect(`/wardrobes/`);
+    return redirect(`/wardrobes/${updates.userid}`);
   }
   return null;
 }
@@ -50,8 +51,17 @@ export default function Wardrobe() {
         type="text"
         id="name"
         name="name"
-        placeholder="Summer..."
-        value={ (wardrobe.name) ? wardrobe.name : ''}
+        defaultValue={wardrobe.name}
+      ></input>
+      <input
+        type="hidden"
+        name="_id"
+        defaultValue={wardrobe._id}
+      ></input>
+      <input
+        type="hidden"
+        name="userid"
+        value={wardrobe.userid}
       ></input>
       <button type="submit" >Save Wardrobe</button>
       <button

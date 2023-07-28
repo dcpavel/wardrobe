@@ -61,7 +61,13 @@ clothingTypes.getById = async (id) => {
 // get all clothing types
 clothingTypes.getAll = async () => {
   try {
-    const getAllQuery = `SELECT * FROM clothingTypes;`;
+    const getAllQuery = `
+      SELECT ct._id, ct.name, bp._id as bpid
+      FROM clothingTypes ct
+      JOIN bodypositions bp
+        ON bp._id = ct.bodypositionid
+      ORDER BY bp.name ASC;
+    `;
 
     const res = await db.query(getAllQuery);
 

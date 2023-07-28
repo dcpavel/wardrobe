@@ -76,7 +76,12 @@ wardrobes.getAll = async () => {
 // get all the wardrobes by user id
 wardrobes.getAllByUserId = async (id) => {
   try {
-    const queryAll = `SELECT * FROM wardrobes WHERE userid=$1;`;
+    const queryAll = `
+      SELECT *
+      FROM wardrobes
+      WHERE userid=$1
+      ORDER BY _id ASC;
+    `;
 
     const res = await db.query(queryAll, [ id ]);
 
@@ -91,8 +96,8 @@ wardrobes.updateWardrobe = async (id, wardrobeObj) => {
   try {
     const { userId, name } = wardrobeObj;
     const current = await wardrobes.getById(id);
-    
-    if (userId !== current.userId) {
+
+    if (userId !== current.userid) {
       throw Error('Cannot change the userId');
     }
 
@@ -106,6 +111,7 @@ wardrobes.updateWardrobe = async (id, wardrobeObj) => {
       updateQuery,
       [ name, id ]
     );
+    const check = await db.query(`SELECT * FROM wardrobes;`);
     
     return res.rows[0];
   } catch (err) {
